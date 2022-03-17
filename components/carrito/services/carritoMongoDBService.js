@@ -4,6 +4,7 @@ let {Schema, model} = mongoose;
 let {carritosSchema} = require("../../../schemas/carrito");
 let carritosSchemaModel = new Schema(carritosSchema);
 let CarritoModel = new model('carrito', carritosSchemaModel);
+let notificacion = require('../../../utils/mailer/mailer');
 
 class CarritoMongoDB{
     //Crear un carrito
@@ -50,6 +51,17 @@ class CarritoMongoDB{
                 return producto.id !== id_prod;
             });
             return await CarritoModel.findOneAndUpdate({"_id": ObjectId(id)},{$set:{productos:productos}});
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    //Generar Pedido de un carrito por id
+    async carritoGetByIdPedido(id){
+        try {
+            let productos = await CarritoModel.findOne({"_id": ObjectId(id)},{productos:1,_id:0});
+            //Enviamos la notificacion
+            notificacion.enviarCorreo("Nuevo pedido",`Detalle del pedido ${productos}`);
+            return productos;
         } catch (error) {
             console.log(error);
         }

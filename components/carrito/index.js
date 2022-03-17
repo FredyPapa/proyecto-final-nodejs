@@ -34,6 +34,8 @@ const apiCarrito = app =>{
     routerMongoDB.post("/:id/productos", carritoMongoDB.carritoPostByIdProducto);
     //Eliminar producto del carrito por id
     routerMongoDB.delete("/:id/productos/:id_prod", carritoMongoDB.carritoProductoDelete);
+    //Generar Pedido de un carrito por id
+    routerMongoDB.get("/:id/pedido", carritoMongoDB.carritoGetByIdPedido);
 
     //Firebase
     app.use("/api/carritoFirebase", routerFirebase);

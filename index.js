@@ -1,5 +1,7 @@
 //Importaciones de terceros
 let express = require("express");
+let expressSession = require('express-session')
+const MongoStore = require('connect-mongo');
 let cors = require("cors");
 require('dotenv').config();
 
@@ -12,6 +14,22 @@ const PORT = process.env.PORT;
 app.use(cors("*"));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+//Sesiones
+app.use(expressSession({
+    store: MongoStore.create({
+        mongoUrl:'mongodb+srv://root:coderhouse@cursonode.o3yqn.mongodb.net/proyecto?retryWrites=true&w=majority',
+        mongoOptions: {useNewUrlParser:true,useUnifiedTopology:true}
+    }),
+    //
+    secret: "secret",
+    cookie:{
+        httpOnly:false,
+        secure: false,
+        maxAge: 1000*60*20
+    },
+    resave: false,
+    saveUninitialized: true
+}));
 
 //Routes
 serverRouter(app);

@@ -41,6 +41,11 @@ class CarritoMongoDB{
         const {params: {id_prod}} = req;
         res.json(await carritoMongoDBService.deleteProductoCarritoById(id,id_prod));
     }
+    //Generar Pedido de un carrito por id
+    async carritoGetByIdPedido(req,res,next){
+        const {params: {id}} = req;
+        res.send(await carritoMongoDBService.carritoGetByIdPedido(id));
+    }
 }
 
 module.exports = new CarritoMongoDB();

@@ -1,4 +1,4 @@
-# Primera entrega del proyecto final - Fredy Papa
+# Segunda entrega del proyecto final - Fredy Papa
 ### (E-commerce Backend)
 
 ##### Nota:
@@ -8,14 +8,17 @@ Puede usar https://dillinger.io/ para ver este contenido con los formatos de MD
 https://github.com/FredyPapa/proyecto-primera-entrega.git
 
 ## Glitch
-- Live: https://dirt-whimsical-gambler.glitch.me
-- Code: https://glitch.com/edit/#!/dirt-whimsical-gambler
+- Live: https://orchid-awake-belief.glitch.me
+- Code: https://glitch.com/edit/#!/orchid-awake-belief
 
 ## Dependencias
 El proyecto usa las siguientes ```dependencias```:
 - cors
 - dotenv
 - express
+- firebase-admin
+- joi
+- mongoose
  
 Y ```dependencias de desarrollo```:
 - nodemon
@@ -26,6 +29,7 @@ Ejecutar el código ```npm install``` para reconstruir los módulos de Node.
 Crear el archivo ```.env``` con el siguiente contenido
 ~~~
 PORT=8080
+MONGO_ATLAS=mongodb+srv://root:coderhouse@cursonode.o3yqn.mongodb.net/proyecto?retryWrites=true&w=majority
 ~~~
 
 ## Arquitectura del proyecto
@@ -35,13 +39,18 @@ El proyecto fue desarrollado considerando la arquitectura ```SOA``` entre los ar
 - routes: Desde aquí se hace el llamado a los componentes del proyecto y la validación de las rutas válidas.
 - components: Posee una estructura basada en controladores y servicios para ejecutar la lógica de la aplicación.
 - files: En la carptea files se guardan los archivos TXT generados para la persistencia de los registros tanto de productos como carrito.
+- config: Contiene la configuración de la conexión a la base de datos.
+- schemas: Contiene el esquema de los catálogos usados
+- utils: Son las utilidades que usa el proyecto, como por ejemplo firebase.
 
 ## Ubicación de la variable (flag) Administrador
 Según el enunciado sólo se hace referencia a rutas disponibles para el Administrador en ```/api/productos``` por ese motivo se añadió el flag en una variable en:
 ~~~
-components/controller/productoController.js
+components/controller/productoArchivoController.js
+components/controller/productoFirebaseController.js
+components/controller/productoMongoDBController .js
 ~~~
-En las líneas 4 y 5 se podrá observar lo siguiente:
+En las líneas 2 y 3 se podrá observar lo siguiente:
 ~~~
 //Flag de administrador
 const administrador = true;
@@ -54,21 +63,21 @@ Los endpoints pueden ser validados con ```Postman```
 ## Proceso de Pruebas de funcionalidad
 Para las pruebas debe ingresar en ```Postman``` los siguientes valores
 
-### /api/productos
+### /api/productosArchivo  (Archivo)
 ```Listar todos los productos```
 | Verbo HTTP | URL |
 | ------ | ------ |
-| GET | http://localhost:8080/api/productos/ |
+| GET | http://localhost:8080/api/productosArchivo/ |
 
 ```Listar producto por id```
 | Verbo HTTP | URL |
 | ------ | ------ |
-| GET | http://localhost:8080/api/productos/1 |
+| GET | http://localhost:8080/api/productosArchivo/1 |
 
 ```Agregar producto``` (sólo permitido para el usuario Administrador)
 | Verbo HTTP | URL |
 | ------ | ------ |
-| POST | http://localhost:8080/api/productos/ |
+| POST | http://localhost:8080/api/productosArchivo/ |
 
 A considerar en el Body (como raw de tipo JSON):
 ~~~
@@ -85,7 +94,7 @@ A considerar en el Body (como raw de tipo JSON):
 ```Actualizar producto``` (sólo permitido para el usuario Administrador)
 | Verbo HTTP | URL |
 | ------ | ------ |
-| PUT | http://localhost:8080/api/productos/4 |
+| PUT | http://localhost:8080/api/productosArchivo/4 |
 
 A considerar en el Body (como raw de tipo JSON):
 ~~~
@@ -102,14 +111,113 @@ A considerar en el Body (como raw de tipo JSON):
 ```Eliminar producto por id``` (sólo permitido para el usuario Administrador)
 | Verbo HTTP | URL |
 | ------ | ------ |
-| DELETE | http://localhost:8080/api/productos/4 |
+| DELETE | http://localhost:8080/api/productosArchivo/4 |
 
+### /api/productosMongoDB  (MongoDB)
+```Listar todos los productos```
+| Verbo HTTP | URL |
+| ------ | ------ |
+| GET | http://localhost:8080/api/productosMongoDB/ |
 
-### /api/carrito
+```Listar producto por id```
+| Verbo HTTP | URL |
+| ------ | ------ |
+| GET | http://localhost:8080/api/productosMongoDB/61de78adef4f51be21bc2959 |
+
+```Agregar producto``` (sólo permitido para el usuario Administrador)
+| Verbo HTTP | URL |
+| ------ | ------ |
+| POST | http://localhost:8080/api/productosMongoDB/ |
+
+A considerar en el Body (como raw de tipo JSON):
+~~~
+{
+    "nombre": "Lápiz 3",
+    "descripcion": "Útiles de oficina para escribir o dibujar",
+    "codigo": "OFI003",
+    "foto": "https://image.shutterstock.com/image-vector/vector-illustration-set-rulers-flat-260nw-1052690225.jpg",
+    "precio": 75,
+    "stock": 150
+}
+~~~
+
+```Actualizar producto``` (sólo permitido para el usuario Administrador)
+| Verbo HTTP | URL |
+| ------ | ------ |
+| PUT | http://localhost:8080/api/productosMongoDB/61de7531c0abac58f96456ea |
+
+A considerar en el Body (como raw de tipo JSON):
+~~~
+{
+    "nombre": "Escuadra 223",
+    "descripcion": "Útiles de oficina 223",
+    "codigo": "OFI001",
+    "foto": "https://image.shutterstock.com/image-vector/vector-illustration-set-rulers-flat-260nw-1052690225.jpg",
+    "precio": 1500,
+    "stock": 1000
+}
+~~~
+
+```Eliminar producto por id``` (sólo permitido para el usuario Administrador)
+| Verbo HTTP | URL |
+| ------ | ------ |
+| DELETE | http://localhost:8080/api/productosMongoDB/61de78adef4f51be21bc2959 |
+
+### /api/productosFirebase  (Firebase)
+```Listar todos los productos```
+| Verbo HTTP | URL |
+| ------ | ------ |
+| GET | http://localhost:8080/api/productosFirebase/ |
+
+```Listar producto por id```
+| Verbo HTTP | URL |
+| ------ | ------ |
+| GET | http://localhost:8080/api/productosFirebase/QMsX7eQvQO3FJo7Mq79U |
+
+```Agregar producto``` (sólo permitido para el usuario Administrador)
+| Verbo HTTP | URL |
+| ------ | ------ |
+| POST | http://localhost:8080/api/productosFirebase/ |
+
+A considerar en el Body (como raw de tipo JSON):
+~~~
+{
+    "nombre": "Lápiz 5",
+    "descripcion": "Útiles de oficina para escribir o dibujar",
+    "codigo": "OFI003",
+    "foto": "https://image.shutterstock.com/image-vector/vector-illustration-set-rulers-flat-260nw-1052690225.jpg",
+    "precio": 75,
+    "stock": 150
+}
+~~~
+
+```Actualizar producto``` (sólo permitido para el usuario Administrador)
+| Verbo HTTP | URL |
+| ------ | ------ |
+| PUT | http://localhost:8080/api/productosFirebase/Gm6hqCXVVheN0VnehewS |
+
+A considerar en el Body (como raw de tipo JSON):
+~~~
+{
+    "nombre": "Escuadra 223",
+    "descripcion": "Útiles de oficina 223",
+    "codigo": "OFI001",
+    "foto": "https://image.shutterstock.com/image-vector/vector-illustration-set-rulers-flat-260nw-1052690225.jpg",
+    "precio": 1500,
+    "stock": 1000
+}
+~~~
+
+```Eliminar producto por id``` (sólo permitido para el usuario Administrador)
+| Verbo HTTP | URL |
+| ------ | ------ |
+| DELETE | http://localhost:8080/api/productosFirebase/ivLKFb2KBiOP2idFZtis |
+
+### /api/carritoArchivo (Archivo)
 ```Crear carrito```
 | Verbo HTTP | URL |
 | ------ | ------ |
-| POST | http://localhost:8080/api/carrito/ |
+| POST | http://localhost:8080/api/carritoArchivo/ |
 
 A considerar en el Body (como raw de tipo JSON):
 ~~~
@@ -149,17 +257,17 @@ A considerar en el Body (como raw de tipo JSON):
 ```Eliminar carrito por id``` 
 | Verbo HTTP | URL |
 | ------ | ------ |
-| DELETE | http://localhost:8080/api/carrito/3 |
+| DELETE | http://localhost:8080/api/carritoArchivo/4 |
 
 ```Listar productos de un carrito por id``` 
 | Verbo HTTP | URL |
 | ------ | ------ |
-| GET | http://localhost:8080/api/carrito/1/productos |
+| GET | http://localhost:8080/api/carritoArchivo/3/productos |
 
 ```Añadir producto al carrito por id```
 | Verbo HTTP | URL |
 | ------ | ------ |
-| POST | http://localhost:8080/api/carrito/1/productos |
+| POST | http://localhost:8080/api/carritoArchivo/1/productos |
 
 A considerar en el Body (como raw de tipo JSON):
 ~~~
@@ -178,8 +286,137 @@ A considerar en el Body (como raw de tipo JSON):
 ```Eliminar un producto del carrito según el id del carrito y el id del  producto```
 | Verbo HTTP | URL |
 | ------ | ------ |
-| DELETE | http://localhost:8080/api/carrito/1/productos/1 |
+| DELETE | http://localhost:8080/api/carritoArchivo/1/productos/4 |
+
+### /api/carritoMongoDB (MongoDB)
+```Crear carrito```
+| Verbo HTTP | URL |
+| ------ | ------ |
+| POST | http://localhost:8080/api/carritoMongoDB/ |
+
+A considerar en el Body (como raw de tipo JSON):
+~~~
+{
+    "productos": 
+                [{
+                    "id": "61de7531c0abac58f96456ea",
+                    "timestamp": "2021-12-15T20:38:02.735Z",
+                    "nombre": "Escuadra",
+                    "descripcion": "Útiles de oficina",
+                    "codigo": "OFI001",
+                    "foto": "https://image.shutterstock.com/image-vector/vector-illustration-set-rulers-flat-260nw-1052690225.jpg",
+                    "precio": 25,
+                    "stock": 120
+                },{
+                    "id": "61df4cbf1c6f58bbf0d62eeb",
+                    "timestamp": "2021-12-15T20:38:02.735Z",
+                    "nombre": "Borrador",
+                    "descripcion": "Útiles de oficina para borrar",
+                    "codigo": "OFI002",
+                    "foto": "https://image.shutterstock.com/image-vector/vector-illustration-set-rulers-flat-260nw-1052690225.jpg",
+                    "precio": 50,
+                    "stock": 100
+                }]
+}
+~~~
+
+```Eliminar carrito por id``` 
+| Verbo HTTP | URL |
+| ------ | ------ |
+| DELETE | http://localhost:8080/api/carritoMongoDB/61df87a78eb3ce1013db36d1 |
+
+```Listar productos de un carrito por id``` 
+| Verbo HTTP | URL |
+| ------ | ------ |
+| GET | http://localhost:8080/api/carritoMongoDB/61df84b41ead7d1885792005/productos |
+
+```Añadir producto al carrito por id```
+| Verbo HTTP | URL |
+| ------ | ------ |
+| POST | http://localhost:8080/api/carritoMongoDB/61df836e25e0ae4d04690696/productos |
+
+A considerar en el Body (como raw de tipo JSON):
+~~~
+{
+    "id": "61de7531c0abac58f96456ea",
+    "timestamp":"2021-12-15T20:38:02.735Z",
+    "nombre": "Lapicero",
+    "descripcion": "Útiles de oficina para escribir 2",
+    "codigo": "OFI004",
+    "foto": "https://image.shutterstock.com/image-vector/vector-illustration-set-rulers-flat-260nw-1052690225.jpg",
+    "precio": 15,
+    "stock": 25
+}
+~~~
+
+```Eliminar un producto del carrito según el id del carrito y el id del  producto```
+| Verbo HTTP | URL |
+| ------ | ------ |
+| DELETE | http://localhost:8080/api/carritoMongoDB/61df836e25e0ae4d04690696/productos/61de7531c0abac58f96456ea |
 
 
+### /api/carritoFirebase (Firebase)
+```Crear carrito```
+| Verbo HTTP | URL |
+| ------ | ------ |
+| POST | http://localhost:8080/api/carritoFirebase/ |
 
+A considerar en el Body (como raw de tipo JSON):
+~~~
+{
+    "productos": 
+                [{
+                    "id": "61de7531c0abac58f96456ea",
+                    "timestamp": "2021-12-15T20:38:02.735Z",
+                    "nombre": "Escuadra",
+                    "descripcion": "Útiles de oficina",
+                    "codigo": "OFI001",
+                    "foto": "https://image.shutterstock.com/image-vector/vector-illustration-set-rulers-flat-260nw-1052690225.jpg",
+                    "precio": 25,
+                    "stock": 120
+                },{
+                    "id": "61df4cbf1c6f58bbf0d62eeb",
+                    "timestamp": "2021-12-15T20:38:02.735Z",
+                    "nombre": "Borrador",
+                    "descripcion": "Útiles de oficina para borrar",
+                    "codigo": "OFI002",
+                    "foto": "https://image.shutterstock.com/image-vector/vector-illustration-set-rulers-flat-260nw-1052690225.jpg",
+                    "precio": 50,
+                    "stock": 100
+                }]
+}
+~~~
 
+```Eliminar carrito por id``` 
+| Verbo HTTP | URL |
+| ------ | ------ |
+| DELETE | http://localhost:8080/api/carritoFirebase/jmfha5NCoKusx7PpWWey |
+
+```Listar productos de un carrito por id``` 
+| Verbo HTTP | URL |
+| ------ | ------ |
+| GET | http://localhost:8080/api/carritoFirebase/CFn8DbaEevAfRGnVlEsR/productos |
+
+```Añadir producto al carrito por id```
+| Verbo HTTP | URL |
+| ------ | ------ |
+| POST | http://localhost:8080/api/carritoFirebase/CFn8DbaEevAfRGnVlEsR/productos |
+
+A considerar en el Body (como raw de tipo JSON):
+~~~
+{
+    "id":   "QMsX7eQvQO3FJo7Mq79U",
+    "timestamp":"2021-12-15T20:38:02.735Z",
+    "nombre": "Lapicero",
+    "descripcion": "Útiles de oficina para escribir 2",
+    "codigo": "OFI004",
+    "foto": "https://image.shutterstock.com/image-vector/vector-illustration-set-rulers-flat-260nw-1052690225.jpg",
+    "precio": 15,
+    "stock": 25
+}
+~~~
+
+```Eliminar un producto del carrito según el id del carrito y el id del  producto```
+| Verbo HTTP | URL |
+| ------ | ------ |
+| DELETE | http://localhost:8080/api/carritoFirebase/CFn8DbaEevAfRGnVlEsR/productos/QMsX7eQvQO3FJo7Mq79U |
