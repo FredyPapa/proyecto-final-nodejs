@@ -4,6 +4,8 @@ let {Schema, model} = mongoose;
 let {productosSchema} = require("../../../schemas/producto");
 let productosSchemaModel = new Schema(productosSchema);
 let ProductoModel = new model('productos', productosSchemaModel);
+//Logger
+let winstonLoggerWarn = require('../../../utils/winston/winstonLoggerError');
 
 class ProductoMongoDB{
     //Obtener todos los productos
@@ -12,7 +14,8 @@ class ProductoMongoDB{
             let productos = await ProductoModel.find();
             return productos;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Obtener producto por Id
@@ -21,7 +24,8 @@ class ProductoMongoDB{
             let producto = await ProductoModel.findOne({"_id": ObjectId(id)});
             return producto;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Crear/Agregar producto
@@ -31,7 +35,8 @@ class ProductoMongoDB{
             new_producto.save();
             return new_producto;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Actualizar un producto según su Id
@@ -39,7 +44,8 @@ class ProductoMongoDB{
         try {
             return await ProductoModel.findOneAndUpdate({"_id": ObjectId(id)},{$set:{timestamp:data.timestamp,nombre:data.nombre,descripcion:data.descripcion,codigo:data.codigo,foto:data.foto,precio:data.precio,stock:data.stock}});
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Eliminar un producto según Id
@@ -47,7 +53,8 @@ class ProductoMongoDB{
         try {
             return await ProductoModel.deleteOne({"_id": ObjectId(id)});
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
 }

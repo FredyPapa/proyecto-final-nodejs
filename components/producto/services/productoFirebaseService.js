@@ -1,4 +1,6 @@
 let {db:firebaseDB} = require('../../../utils/firebase');
+//Logger
+let winstonLoggerWarn = require('../../../utils/winston/winstonLoggerError');
 
 class ProductoFirebase{
     //Obtener todos los productos
@@ -17,7 +19,8 @@ class ProductoFirebase{
             //Devolvemos el resultado
             return dataFirebase;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Obtener producto por Id
@@ -38,7 +41,8 @@ class ProductoFirebase{
             //Devolvemos el resultado
             return producto;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Crear/Agregar producto
@@ -47,7 +51,8 @@ class ProductoFirebase{
             let productos = firebaseDB.collection("productos");
             return await productos.doc().set(data);
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Actualizar un producto según su Id
@@ -70,7 +75,8 @@ class ProductoFirebase{
                 }
             });
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Eliminar un producto según Id
@@ -93,7 +99,8 @@ class ProductoFirebase{
                 }
             });
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
 }

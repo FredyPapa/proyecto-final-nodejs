@@ -5,6 +5,8 @@ let {carritosSchema} = require("../../../schemas/carrito");
 let carritosSchemaModel = new Schema(carritosSchema);
 let CarritoModel = new model('carrito', carritosSchemaModel);
 let notificacion = require('../../../utils/mailer/mailer');
+//Logger
+let winstonLoggerWarn = require('../../../utils/winston/winstonLoggerError');
 
 class CarritoMongoDB{
     //Crear un carrito
@@ -14,7 +16,8 @@ class CarritoMongoDB{
             new_carrito.save();
             return new_carrito;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Eliminar un carrito según Id
@@ -22,7 +25,8 @@ class CarritoMongoDB{
         try {
             return await CarritoModel.deleteOne({"_id": ObjectId(id)});
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Obtener los productos de un carrito por Id
@@ -31,7 +35,8 @@ class CarritoMongoDB{
             let productos = await CarritoModel.findOne({"_id": ObjectId(id)},{productos:1,_id:0});
             return productos;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Agregar producto a un carrito por id
@@ -39,20 +44,21 @@ class CarritoMongoDB{
         try {
             return await CarritoModel.findOneAndUpdate({"_id": ObjectId(id)},{$push:{productos:data}});
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Eliminar producto del carrito por id
     async deleteProductoCarritoById(id, id_prod){
         try {
             let {productos} = await CarritoModel.findOne({"_id": ObjectId(id)},{productos:1,_id:0});
-            console.log(productos);
             productos = productos.filter((producto)=>{
                 return producto.id !== id_prod;
             });
             return await CarritoModel.findOneAndUpdate({"_id": ObjectId(id)},{$set:{productos:productos}});
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Generar Pedido de un carrito por id
@@ -63,7 +69,8 @@ class CarritoMongoDB{
             notificacion.enviarCorreo("Nuevo pedido",`Detalle del pedido ${productos}`);
             return productos;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
 }

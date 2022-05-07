@@ -1,4 +1,6 @@
 const fs = require("fs");
+//Logger
+let winstonLoggerWarn = require('../../../utils/winston/winstonLoggerError');
 
 class ProductoArchivo{
     constructor(url){
@@ -22,7 +24,8 @@ class ProductoArchivo{
             //Devolvemos el arreglo de productos
             return this.arregloProductos;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Obtener producto por Id
@@ -40,7 +43,8 @@ class ProductoArchivo{
             //Devolvemos la respuesta
             return productoSeleccionado;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Crear/Agregar producto
@@ -59,7 +63,8 @@ class ProductoArchivo{
             //Devolvemos el ID creado
             return data;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Actualizar un producto según su Id
@@ -91,7 +96,8 @@ class ProductoArchivo{
             //Devolvemos el objeto con la información actualizada
             return productoSeleccionado;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Eliminar un producto según Id
@@ -118,7 +124,8 @@ class ProductoArchivo{
             }
             return rpta;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Eliminar todos los productos
@@ -127,7 +134,8 @@ class ProductoArchivo{
             //Guardamos el arreglo vacío en el archivo
             await fs.promises.unlink(this.url);
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
 }

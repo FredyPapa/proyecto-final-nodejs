@@ -1,4 +1,6 @@
 let {db:firebaseDB} = require('../../../utils/firebase');
+//Logger
+let winstonLoggerWarn = require('../../../utils/winston/winstonLoggerError');
 
 class CarritoFirebase{
     //Crear un carrito
@@ -7,7 +9,8 @@ class CarritoFirebase{
             let carrito = firebaseDB.collection("carrito");
             return await carrito.doc().set(data);
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Eliminar un carrito según Id
@@ -30,7 +33,8 @@ class CarritoFirebase{
                 }
             });
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Obtener los productos de un carrito por Id
@@ -51,7 +55,8 @@ class CarritoFirebase{
             //Devolvemos el resultado
             return filtro[0].productos;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Agregar producto a un carrito por id
@@ -81,7 +86,8 @@ class CarritoFirebase{
                 }
             });
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Eliminar producto del carrito por id
@@ -111,7 +117,8 @@ class CarritoFirebase{
                 }
             });
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
 }

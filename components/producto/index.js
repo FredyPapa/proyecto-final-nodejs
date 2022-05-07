@@ -1,4 +1,6 @@
 const { Router }  = require("express");
+//Validación de JWT
+const { validarJWT } = require('../../utils/jwt/validar-jwt');
 //
 const productoArchivo  = require("./controller/productoArchivoController");
 const productoMongoDB = require('./controller/productoMongoDBController');
@@ -12,42 +14,42 @@ const apiProductos = app =>{
     //Archivo
     app.use("/api/productosArchivo", routerArchivo);
     //Listar todos los productos
-    routerArchivo.get("/",productoArchivo.productosGet);
+    routerArchivo.get("/",validarJWT,productoArchivo.productosGet);
     //Listar un producto por id
-    routerArchivo.get("/:id", productoArchivo.productoGetById);
+    routerArchivo.get("/:id",validarJWT, productoArchivo.productoGetById);
     //Agregar producto
-    routerArchivo.post("/", productoArchivo.productoPost);
+    routerArchivo.post("/",validarJWT, productoArchivo.productoPost);
     //Actualizar producto por id
-    routerArchivo.put("/:id", productoArchivo.productoUpdate);
+    routerArchivo.put("/:id",validarJWT, productoArchivo.productoUpdate);
     //Eliminar producto por id
-    routerArchivo.delete("/:id", productoArchivo.productoDelete);
+    routerArchivo.delete("/:id",validarJWT, productoArchivo.productoDelete);
 
     //MongoDB
     app.use("/api/productosMongoDB", routerMongoDB);
     //Listar todos los productos
-    routerMongoDB.get("/",productoMongoDB.productosGet);
+    routerMongoDB.get("/",validarJWT,productoMongoDB.productosGet);
     //Listar un producto por id
-    routerMongoDB.get("/:id", productoMongoDB.productoGetById);
+    routerMongoDB.get("/:id",validarJWT, productoMongoDB.productoGetById);
     //Agregar producto
-    routerMongoDB.post("/", productoMongoDB.productoPost);
+    routerMongoDB.post("/",validarJWT, productoMongoDB.productoPost);
     //Actualizar producto por id
-    routerMongoDB.put("/:id", productoMongoDB.productoUpdate);
+    routerMongoDB.put("/:id",validarJWT, productoMongoDB.productoUpdate);
     //Eliminar producto por id
-    routerMongoDB.delete("/:id", productoMongoDB.productoDelete);
+    routerMongoDB.delete("/:id",validarJWT, productoMongoDB.productoDelete);
     
     
     //Firebase
     app.use("/api/productosFirebase", routerFirebase);
     //Listar todos los productos
-    routerFirebase.get("/",productoFirebase.productosGet);
+    routerFirebase.get("/",validarJWT,productoFirebase.productosGet);
     //Listar un producto por id
-    routerFirebase.get("/:id", productoFirebase.productoGetById);
+    routerFirebase.get("/:id",validarJWT, productoFirebase.productoGetById);
     //Agregar producto
-    routerFirebase.post("/", productoFirebase.productoPost);
+    routerFirebase.post("/",validarJWT, productoFirebase.productoPost);
     //Actualizar producto por id
-    routerFirebase.put("/:id", productoFirebase.productoUpdate);
+    routerFirebase.put("/:id",validarJWT, productoFirebase.productoUpdate);
     //Eliminar producto por id
-    routerFirebase.delete("/:id", productoFirebase.productoDelete);
+    routerFirebase.delete("/:id",validarJWT, productoFirebase.productoDelete);
     
 }
 

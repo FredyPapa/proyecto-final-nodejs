@@ -6,6 +6,9 @@ let usuariosSchemaModel = new Schema(usuariosSchema);
 let UsuarioModel = new model('usuarios', usuariosSchemaModel);
 const bcrypt = require('bcryptjs');
 let notificacion = require('../../../utils/mailer/mailer');
+const { generarJWT } = require('../../../utils/jwt/generar-jwt');
+//Logger
+let winstonLoggerWarn = require('../../../utils/winston/winstonLoggerError');
 
 class Usuario{
     //Registrar usuario
@@ -18,7 +21,9 @@ class Usuario{
             //Devolvemos el registro creado
             return new_usuario;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
+
         }
     }
 
@@ -30,19 +35,24 @@ class Usuario{
             if(!usuario){
                 return 0;
             }else if(usuario && bcrypt.compareSync(data.password,usuario.password)){
+                // Generar el JWT
+                const token = await generarJWT( usuario.id );
+                //
                 let usuario_rpta = {
                     "_id": ObjectId(usuario._id),
                     email: usuario.email,
                     nombre: usuario.nombre,
                     telefono: usuario.telefono,
-                    foto: usuario.foto
+                    foto: usuario.foto,
+                    token
                 }
                 return usuario_rpta;
             }else{
                 return 1;
             }
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
 }

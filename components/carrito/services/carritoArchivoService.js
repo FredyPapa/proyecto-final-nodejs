@@ -1,4 +1,6 @@
 const fs = require("fs");
+//Logger
+let winstonLoggerWarn = require('../../../utils/winston/winstonLoggerError');
 
 class CarritoArchivo{
     constructor(url){
@@ -30,7 +32,8 @@ class CarritoArchivo{
             //Devolvemos el ID creado
             return data;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Eliminar un carrito según Id
@@ -57,7 +60,8 @@ class CarritoArchivo{
             }
             return rpta;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Obtener los productos de un carrito por Id
@@ -77,7 +81,8 @@ class CarritoArchivo{
                 return carritoSeleccionado[0].productos;
             }
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Agregar producto a un carrito por id
@@ -103,7 +108,8 @@ class CarritoArchivo{
             //Devolvemos el objeto con la información actualizada
             return carritoSeleccionado;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
     //Eliminar producto del carrito por id
@@ -140,7 +146,8 @@ class CarritoArchivo{
             }
             return rpta;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerWarn.error("Error presentado: "+error);
         }
     }
 
