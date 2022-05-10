@@ -1,4 +1,4 @@
-# Tercera entrega del proyecto final - Fredy Papa
+# Entrega del proyecto final - Fredy Papa
 ### (E-commerce Backend)
 
 ##### Nota:
