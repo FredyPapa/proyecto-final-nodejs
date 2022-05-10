@@ -5,7 +5,10 @@
 Puede usar https://dillinger.io/ para ver este contenido con los formatos de MD
 
 ## GitHub
-https://github.com/FredyPapa/Tercera-entrega-proyecto-Fredy
+https://github.com/FredyPapa/proyecto-final-nodejs
+
+## Ruta base del despliegue en Heroku
+https://curso-nodejs-fpapa.herokuapp.com/
 
 ## Dependencias
 El proyecto usa las siguientes ```dependencias```:
