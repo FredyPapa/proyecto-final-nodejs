@@ -3,6 +3,7 @@ let express = require("express");
 let expressSession = require('express-session')
 const MongoStore = require('connect-mongo');
 let cors = require("cors");
+const fileUpload = require('express-fileupload');
 require('dotenv').config();
 
 //Importaciones propias del proyecto
@@ -14,6 +15,11 @@ const PORT = process.env.PORT;
 app.use(cors("*"));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use(fileUpload({
+    useTempFiles:true,
+    tempFileDir:"/tmp/"
+}));
+
 //Sesiones
 app.use(expressSession({
     store: MongoStore.create({

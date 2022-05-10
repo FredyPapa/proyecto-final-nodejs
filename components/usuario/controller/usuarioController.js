@@ -1,9 +1,28 @@
 const usuarioService  = require("../services/usuarioService");
 const bcrypt = require('bcryptjs');
+const path = require('path');
 
 class Usuario{
     //Registrar usuario
     async usuarioPost(req,res,next){
+        //Validamos la carga del archivo
+        if(!req.files || Object.keys(req.files).length===0 || !req.files.foto){
+            res.status(400).json({"msg":"No subió el archivo"});
+            return;
+        }
+        //
+        const {foto} = req.files;
+        let nombreFoto = foto.name;
+        const uploadPath = path.join(__dirname,"../../../files",nombreFoto);
+        //
+        foto.mv(uploadPath,(err)=>{
+            if(err){
+                return res.status(500).join({err});
+            }
+        });
+
+
+        //Enviamos la información para guardar en base de datos
         const now = new Date();
         const usuario = {
             timestamp: now,
@@ -13,7 +32,7 @@ class Usuario{
             direccion: req.body.direccion,
             edad: req.body.edad,
             telefono: req.body.telefono,
-            foto: req.body.foto
+            foto: nombreFoto
         };
         res.json(await usuarioService.save(usuario));
     }
